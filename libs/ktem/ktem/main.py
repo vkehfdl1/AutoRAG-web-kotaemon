@@ -159,8 +159,10 @@ class App(BaseApp):
                         tabs_update.append(gr.update(visible=False))
                     elif k == "resources-tab":
                         tabs_update.append(gr.update(visible=False))
-                    else:
+                    elif k in ["chat-tab", "settings-tab", "help-tab"]:
                         tabs_update.append(gr.update(visible=True))
+                    else:
+                        tabs_update.append(gr.update(visible=False))
 
                 tabs_update.append(gr.update(selected="chat-tab"))
 
