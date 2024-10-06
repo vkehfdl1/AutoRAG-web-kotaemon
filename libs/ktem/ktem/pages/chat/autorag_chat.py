@@ -17,6 +17,7 @@ from theflow.settings import settings as flowsettings
 from kotaemon.base import Document
 from kotaemon.indices.ingests.files import KH_DEFAULT_FILE_EXTRACTORS
 
+from . import ReportIssue
 from .chat_panel import ChatPanel
 from .chat_suggestion import ChatSuggestion
 from .common import STATE
@@ -105,7 +106,7 @@ class AutoRAGChatPage(BasePage):
                         )
                         self.quick_file_upload_status = gr.Markdown()
 
-                # self.report_issue = ReportIssue(self._app)
+                self.report_issue = ReportIssue(self._app)
 
             with gr.Column(scale=6, elem_id="chat-area"):
                 self.chat_panel = ChatPanel(self._app)
@@ -470,22 +471,22 @@ class AutoRAGChatPage(BasePage):
             show_progress="hidden",
         )
 
-        # self.report_issue.report_btn.click(
-        #     self.report_issue.report,
-        #     inputs=[
-        #         self.report_issue.correctness,
-        #         self.report_issue.issues,
-        #         self.report_issue.more_detail,
-        #         self.chat_control.conversation_id,
-        #         self.chat_panel.chatbot,
-        #         self._app.settings_state,
-        #         self._app.user_id,
-        #         self.info_panel,
-        #         self.state_chat,
-        #     ]
-        #     + self._indices_input,
-        #     outputs=None,
-        # )
+        self.report_issue.report_btn.click(
+            self.report_issue.report,
+            inputs=[
+                self.report_issue.correctness,
+                self.report_issue.issues,
+                self.report_issue.more_detail,
+                self.chat_control.conversation_id,
+                self.chat_panel.chatbot,
+                self._app.settings_state,
+                self._app.user_id,
+                self.info_panel,
+                self.state_chat,
+            ]
+            + self._indices_input,
+            outputs=None,
+        )
         self.reasoning_types.change(
             self.reasoning_changed,
             inputs=[self.reasoning_types],
