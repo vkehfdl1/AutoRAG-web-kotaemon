@@ -85,13 +85,13 @@ class SettingsPage(BasePage):
 
         # render index page if there are index settings (general and/or specific)
         self._render_index_tab = False
-        if self._default_settings.index.settings:
-            self._render_index_tab = True
-        else:
-            for sig in self._default_settings.index.options.values():
-                if sig.settings:
-                    self._render_index_tab = True
-                    break
+        # if self._default_settings.index.settings:
+        #     self._render_index_tab = True
+        # else:
+        #     for sig in self._default_settings.index.options.values():
+        #         if sig.settings:
+        #             self._render_index_tab = True
+        #             break
 
         # render reasoning page if there are reasoning settings
         self._render_reasoning_tab = False
@@ -284,7 +284,7 @@ class SettingsPage(BasePage):
 
     def reasoning_tab(self):
         with gr.Tab("Reasoning settings", visible=self._render_reasoning_tab):
-            with gr.Group():
+            with gr.Group(visible=False):
                 for n, si in self._default_settings.reasoning.settings.items():
                     if n == "use":
                         continue
