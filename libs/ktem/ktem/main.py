@@ -70,7 +70,7 @@ class App(BaseApp):
                             "indices-tab",
                         ],
                         id="indices-tab",
-                        visible=not self.f_user_management,
+                        visible=False,
                     ) as self._tabs[f"{index.id}-tab"]:
                         page = index.get_index_page_ui()
                         setattr(self, f"_index_{index.id}", page)
@@ -80,12 +80,13 @@ class App(BaseApp):
                     elem_id="indices-tab",
                     elem_classes=["fill-main-area-height", "scrollable", "indices-tab"],
                     id="indices-tab",
-                    visible=not self.f_user_management,
+                    visible=False,
                 ) as self._tabs["indices-tab"]:
                     for index in self.index_manager.indices:
                         with gr.Tab(
                             f"{index.name} Collection",
                             elem_id=f"{index.id}-tab",
+                            visible=False,
                         ) as self._tabs[f"{index.id}-tab"]:
                             page = index.get_index_page_ui()
                             setattr(self, f"_index_{index.id}", page)
@@ -94,7 +95,7 @@ class App(BaseApp):
                 "Resources",
                 elem_id="resources-tab",
                 id="resources-tab",
-                visible=not self.f_user_management,
+                visible=False,
                 elem_classes=["fill-main-area-height", "scrollable"],
             ) as self._tabs["resources-tab"]:
                 self.resources_page = ResourcesTab(self)
@@ -150,14 +151,14 @@ class App(BaseApp):
                             for k in self._tabs.keys()
                         )
 
-                    is_admin = user.admin
+                    user.admin
 
                 tabs_update = []
                 for k in self._tabs.keys():
                     if k == "login-tab":
                         tabs_update.append(gr.update(visible=False))
                     elif k == "resources-tab":
-                        tabs_update.append(gr.update(visible=is_admin))
+                        tabs_update.append(gr.update(visible=False))
                     else:
                         tabs_update.append(gr.update(visible=True))
 
