@@ -1,7 +1,7 @@
 import gradio as gr
 from decouple import config
 from ktem.app import BaseApp
-from ktem.pages.chat import ChatPage
+from ktem.pages.chat.autorag_chat import AutoRAGChatPage
 from ktem.pages.help import HelpPage
 from ktem.pages.resources import ResourcesTab
 from ktem.pages.settings import SettingsPage
@@ -57,7 +57,7 @@ class App(BaseApp):
                 id="chat-tab",
                 visible=not self.f_user_management,
             ) as self._tabs["chat-tab"]:
-                self.chat_page = ChatPage(self)
+                self.chat_page = AutoRAGChatPage(self)
 
             if len(self.index_manager.indices) == 1:
                 for index in self.index_manager.indices:

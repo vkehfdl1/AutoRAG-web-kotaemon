@@ -1,12 +1,12 @@
 import json
-from typing import Generator, Optional
+from typing import Generator
 from urllib.parse import urljoin
 
 import requests
 from ktem.reasoning.base import BaseReasoning
 from ktem.utils.render import Render
 
-from kotaemon.base import BaseComponent, Document, RetrievedDocument
+from kotaemon.base import Document, RetrievedDocument
 
 
 class AutoRAGPipeline(BaseReasoning):
@@ -19,8 +19,8 @@ class AutoRAGPipeline(BaseReasoning):
     def get_pipeline(
         cls,
         user_settings: dict,
-        state: dict,
-        retrievers: Optional[list[BaseComponent]] = None,
+        *args,
+        **kwargs,
     ) -> "BaseReasoning":
         url = user_settings.get("autorag_url", "http://localhost:8000")
 
@@ -29,6 +29,8 @@ class AutoRAGPipeline(BaseReasoning):
 
     @classmethod
     def get_user_settings(cls) -> dict:
+        llm = ""
+        choices = [("(default)", "")]
         return {
             "autorag_url": {
                 "name": "AutoRAG API Endpoint URL",
@@ -39,7 +41,19 @@ class AutoRAGPipeline(BaseReasoning):
                     "AutoRAG will find you the most optimal "
                     "RAG pipeline for your documents."
                 ),
-            }
+            },
+            "llm": {
+                "name": "Language model",
+                "value": llm,
+                "component": "dropdown",
+                "choices": choices,
+                "special_type": "llm",
+                "info": (
+                    "The language model to use for renaming conversation. "
+                    "If you don't set this,"
+                    "the application default language model will be used."
+                ),
+            },
         }
 
     @classmethod
