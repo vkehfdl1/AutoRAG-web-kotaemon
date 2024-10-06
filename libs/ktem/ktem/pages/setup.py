@@ -52,7 +52,12 @@ class SetupPage(BasePage):
         self.on_building_ui()
 
     def on_building_ui(self):
-        gr.Markdown(f"# Welcome to {self._app.app_name} first setup!")
+        gr.Markdown(
+            f"# Welcome to {self._app.app_name} first setup!"
+            f"\n\nThis api key is for the conversation renaming."
+            f"\nYou can change the AutoRAG API server "
+            f"URL at the settings page after this setup."
+        )
         self.radio_model = gr.Radio(
             [
                 ("Cohere API (*free registration* available) - recommended", "cohere"),
