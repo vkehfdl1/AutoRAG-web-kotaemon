@@ -491,6 +491,7 @@ class FullQAPipeline(BaseReasoning):
                 else:
                     retriever_docs_text.append(doc)
 
+            # Drop Duplicate Documents
             for doc in retriever_docs_text:
                 if doc.doc_id not in doc_ids:
                     docs.append(doc)
@@ -498,13 +499,14 @@ class FullQAPipeline(BaseReasoning):
 
             plot_docs.extend(retriever_docs_plot)
 
+        # In docs, only text documents are stored
         info = [
             Document(
                 channel="info",
                 content=Render.collapsible_with_header(doc, open_collapsible=True),
             )
             for doc in docs
-        ] + [
+        ] + [  # No plot docs!!
             Document(
                 channel="plot",
                 content=doc.metadata.get("data", ""),
@@ -642,7 +644,7 @@ class FullQAPipeline(BaseReasoning):
     ) -> Document:  # type: ignore
         raise NotImplementedError
 
-    def stream(  # type: ignore
+    def stream(  # type: ignore # 이게 밖으로 나가는 것임.
         self, message: str, conv_id: str, history: list, **kwargs  # type: ignore
     ) -> Generator[Document, None, Document]:
         if self.use_rewrite and self.rewrite_pipeline:
@@ -654,7 +656,7 @@ class FullQAPipeline(BaseReasoning):
         # should populate the context
         docs, infos = self.retrieve(message, history)
         print(f"Got {len(docs)} retrieved documents")
-        yield from infos
+        yield from infos  # Information부터 보냄.
 
         evidence_mode, evidence, images = self.evidence_pipeline(docs).content
 

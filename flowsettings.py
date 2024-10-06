@@ -247,6 +247,7 @@ KH_RERANKINGS["cohere"] = {
 }
 
 KH_REASONINGS = [
+    "ktem.reasoning.autorag.AutoRAGPipeline",
     "ktem.reasoning.simple.FullQAPipeline",
     "ktem.reasoning.simple.FullDecomposeQAPipeline",
     "ktem.reasoning.react.ReactAgentPipeline",
@@ -286,7 +287,7 @@ SETTINGS_REASONING = {
 
 KH_INDEX_TYPES = [
     "ktem.index.file.FileIndex",
-    "ktem.index.file.graph.GraphRAGIndex",
+    # "ktem.index.file.graph.GraphRAGIndex",
 ]
 KH_INDICES = [
     {
@@ -300,15 +301,15 @@ KH_INDICES = [
         },
         "index_type": "ktem.index.file.FileIndex",
     },
-    {
-        "name": "GraphRAG",
-        "config": {
-            "supported_file_types": (
-                ".png, .jpeg, .jpg, .tiff, .tif, .pdf, .xls, .xlsx, .doc, .docx, "
-                ".pptx, .csv, .html, .mhtml, .txt, .md, .zip"
-            ),
-            "private": False,
-        },
-        "index_type": "ktem.index.file.graph.GraphRAGIndex",
-    },
+    # {
+    #     "name": "GraphRAG",
+    #     "config": {
+    #         "supported_file_types": (
+    #             ".png, .jpeg, .jpg, .tiff, .tif, .pdf, .xls, .xlsx, .doc, .docx, "
+    #             ".pptx, .csv, .html, .mhtml, .txt, .md, .zip"
+    #         ),
+    #         "private": False,
+    #     },
+    #     "index_type": "ktem.index.file.graph.GraphRAGIndex",
+    # },
 ]

@@ -792,11 +792,12 @@ class ChatPage(BasePage):
             if response.channel is None:
                 continue
 
+            # HERE IS IMPORTANT
             if response.channel == "chat":
                 if response.content is None:
                     text = ""
                 else:
-                    text += response.content
+                    text = response.content
 
             if response.channel == "info":
                 if response.content is None:

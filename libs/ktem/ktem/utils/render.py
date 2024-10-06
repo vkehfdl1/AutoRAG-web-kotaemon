@@ -56,6 +56,8 @@ class Render:
     ) -> str:
         text = doc.content
         pdf_path = doc.metadata.get("file_path", "")
+        if pdf_path is None:
+            pdf_path = ""
 
         if not os.path.isfile(pdf_path):
             print(f"pdf-path: {pdf_path} does not exist")
