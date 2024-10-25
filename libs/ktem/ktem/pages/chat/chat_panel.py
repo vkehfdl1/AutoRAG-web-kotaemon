@@ -12,7 +12,9 @@ class ChatPanel(BasePage):
             label=self._app.app_name,
             placeholder=(
                 "This is the beginning of a new conversation.\nIf you are new, "
-                "visit the Help tab for quick instructions."
+                "visit the Help tab for quick instructions.\n"
+                "If you don't set AutoRAG API URL yet. "
+                "Please check at the Settings - Reasoning tab."
             ),
             show_label=False,
             elem_id="main-chat-bot",

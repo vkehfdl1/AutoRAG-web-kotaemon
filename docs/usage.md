@@ -3,6 +3,23 @@
 If you want to change the URL of the AutoRAG API server, you can change it on the settings tab.
 With this, you can access to the remote AutoRAG API server easily.
 
+If you want to deploy kotaemon server to remote, but want to use AutoRAG on your own server,
+it is great to use the pyNgrok to access to the AutoRAG API server.
+It automatically creates an ngrok tunnel to your local server.
+
+After you start your API server, you can see the NGrok URL on the log like below:
+
+```bash
+INFO     [api.py:199] >> Public API URL:          api.py:199
+         https://8a31-14-52-132-205.ngrok-free.app
+```
+
+Then, go to the `settings` Tab and click `Reasoning Settings`. There, you can edit AutoRAG URL.
+Put your NGrok URL to the `AutoRAG URL` field and click `Save`.
+The input should be like "https://8a31-14-52-132-205.ngrok-free.app".
+
+Or you can put your own AutoRAG server URL to the field.
+
 ## 2. Chat History
 
 The chat history will be stored on to your local.
