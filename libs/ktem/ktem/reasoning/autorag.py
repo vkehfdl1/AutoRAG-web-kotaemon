@@ -170,7 +170,7 @@ class AutoRAGPipeline(BaseReasoning):
                             passage_list = []
                             for data in data_list:
                                 if data["type"] == "retrieved_passage":
-                                    passage_list.append(data)
+                                    passage_list.append(data["retrieved_passage"])
                                     docs, info = self.make_retrieve_docs(passage_list)
                                     yield from info
                                 else:
