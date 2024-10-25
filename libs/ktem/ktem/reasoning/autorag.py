@@ -67,7 +67,9 @@ class AutoRAGPipeline(BaseReasoning):
         *args,
         **kwargs,
     ) -> "BaseReasoning":
-        url = user_settings.get("autorag_url", "http://localhost:8000")
+        url = user_settings.get(
+            "reasoning.options.autorag.autorag_url", "http://localhost:8000"
+        )
 
         pipeline = cls(url=url)
         return pipeline
