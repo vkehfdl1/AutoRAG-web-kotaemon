@@ -1,4 +1,5 @@
 import json
+from json import JSONDecoder
 from typing import Generator
 from urllib.parse import urljoin
 
@@ -7,6 +8,50 @@ from ktem.reasoning.base import BaseReasoning
 from ktem.utils.render import Render
 
 from kotaemon.base import Document, RetrievedDocument
+
+
+def decode_multiple_json_from_bytes(byte_data: bytes) -> list:
+    """
+    Decode multiple JSON objects from bytes received from SSE server.
+
+    Args:
+            byte_data: Bytes containing one or more JSON objects
+
+    Returns:
+            List of decoded JSON objects
+    """
+    # Decode bytes to string
+    try:
+        text_data = byte_data.decode("utf-8").strip()
+    except UnicodeDecodeError:
+        raise ValueError("Invalid byte data: Unable to decode as UTF-8")
+
+    # Initialize decoder and result list
+    decoder = JSONDecoder()
+    result = []
+
+    # Keep track of position in string
+    pos = 0
+    text_data = text_data.strip()
+
+    while pos < len(text_data):
+        try:
+            # Try to decode next JSON object
+            json_obj, json_end = decoder.raw_decode(text_data[pos:])
+            result.append(json_obj)
+
+            # Move position to end of current JSON object
+            pos += json_end
+
+            # Skip any whitespace
+            while pos < len(text_data) and text_data[pos].isspace():
+                pos += 1
+
+        except json.JSONDecodeError:
+            # If we can't decode at current position, move forward one character
+            pos += 1
+
+    return result
 
 
 class AutoRAGPipeline(BaseReasoning):
@@ -43,7 +88,7 @@ class AutoRAGPipeline(BaseReasoning):
                 ),
             },
             "llm": {
-                "name": "Language model",
+                "name": "Language model for make conversation title",
                 "value": llm,
                 "component": "dropdown",
                 "choices": choices,
@@ -69,10 +114,8 @@ class AutoRAGPipeline(BaseReasoning):
 
     @staticmethod
     def make_retrieve_docs(
-        json_data: dict,
+        passages: list[dict],
     ) -> tuple[list[RetrievedDocument], list[Document]]:
-        retrieved_passages = json_data["retrieved_passage"]
-
         docs = list(
             map(
                 lambda x: RetrievedDocument(
@@ -85,7 +128,7 @@ class AutoRAGPipeline(BaseReasoning):
                         "end_idx": x["end_idx"],
                     },
                 ),
-                retrieved_passages,
+                passages,
             )
         )
 
@@ -122,13 +165,18 @@ class AutoRAGPipeline(BaseReasoning):
                     # Process the streaming response
                     for i, chunk in enumerate(response.iter_content(chunk_size=None)):
                         if chunk:
+                            data_list = decode_multiple_json_from_bytes(chunk)
                             # Decode the chunk and print it
-                            data = json.loads(chunk.decode("utf-8"))
-                            if i == 0:
-                                docs, info = self.make_retrieve_docs(data)
-                                yield from info
-                            else:
-                                yield Document(content=data["result"], channel="chat")
+                            passage_list = []
+                            for data in data_list:
+                                if data["type"] == "retrieved_passage":
+                                    passage_list.append(data)
+                                    docs, info = self.make_retrieve_docs(passage_list)
+                                    yield from info
+                                else:
+                                    yield Document(
+                                        content=data["generated_text"], channel="chat"
+                                    )
 
                     # yield from [
                     # 				Document(channel="info",
